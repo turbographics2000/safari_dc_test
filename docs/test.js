@@ -18,7 +18,11 @@ fetch(`https://skyway.io/${apiKey}/id?ts=${Date.now()}${Math.random()}`)
       if (msg.src && !pc) start();
       if(msg.ans) {
         console.log('setRemoteDescription(answer)');
-        pc.setRemoteDescription(new RTCSessionDescription(msg.ans));
+        pc.setRemoteDescription(new RTCSessionDescription(msg.ans)).then(_ => {
+          console.log('create dc');
+          var dc = pc.createDataChannel('test');
+          dcEventSetup(dc);
+        });
       }
       if(msg.ofr) {
         console.log('setRemoteDescription(offer)');
@@ -70,13 +74,8 @@ function start(isAlice) {
   //       pc.addTrack ? stream.getTracks().map(trk => pc.addTrack(trk, stream)) : pc.addStream(stream);
   //   }).catch(e => console.log(`${e.name}: ${e.message}`));
   //   pc.onaddstream = evt => remoteView.srcObject = evt.stream;
-  if(isAlice) {
-    var dc = pc.createDataChannel('test');
-    dcEventSetup(dc);
-  } else {
-    pc.ondatachannel = evt => {
-      dcEventSetup(evt.channel);
-    }
+  pc.ondatachannel = evt => {
+    dcEventSetup(evt.channel);
   }
 }
 
