@@ -54,6 +54,8 @@ function dcEventSetup(dc) {
     dc.send('hello');
   }
   dc.onmessage = evt => {
-    console.log(evt.data);
+    var div = document.createElement('div');
+    div.textContent = evt.data;
+    msgContainer.appendChild(div);
   }
 }
