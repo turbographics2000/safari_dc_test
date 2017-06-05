@@ -70,7 +70,7 @@ function start(isAlice) {
   //       pc.addTrack ? stream.getTracks().map(trk => pc.addTrack(trk, stream)) : pc.addStream(stream);
   //   }).catch(e => console.log(`${e.name}: ${e.message}`));
   //   pc.onaddstream = evt => remoteView.srcObject = evt.stream;
-  if (!isAlice) {
+  if (isAlice) {
     console.log('create dc');
     var dc = pc.createDataChannel('test');
     dcEventSetup(dc);
