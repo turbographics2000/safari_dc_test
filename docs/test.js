@@ -16,22 +16,18 @@ fetch(`https://skyway.io/${apiKey}/id?ts=${Date.now()}${Math.random()}`)
     socket.onmessage = evt => {
       const msg = j2o(evt.data);
       if (msg.src && !pc) start();
-      if(msg.ans) {
+      if (msg.ans) {
         console.log('setRemoteDescription(answer)');
-        pc.setRemoteDescription(new RTCSessionDescription(msg.ans)).then(_ => {
-          console.log('create dc');
-          var dc = pc.createDataChannel('test');
-          dcEventSetup(dc);
-        });
+        pc.setRemoteDescription(new RTCSessionDescription(msg.ans));
       }
-      if(msg.ofr) {
+      if (msg.ofr) {
         console.log('setRemoteDescription(offer)');
         pc.setRemoteDescription(new RTCSessionDescription(msg.ofr))
-          .then(_ =>{
+          .then(_ => {
             console.log('createAnswer()');
             return pc.createAnswer();
           })
-          .then(answer =>{
+          .then(answer => {
             console.log('setLocalDescription(answer)');
             return pc.setLocalDescription(answer);
           })
@@ -40,7 +36,7 @@ fetch(`https://skyway.io/${apiKey}/id?ts=${Date.now()}${Math.random()}`)
             socket.send(o2j({ type: 'ANSWER', ans: pc.localDescription, dst: msg.src }))
           })
           .catch(e => console.log('set remote offer error', e));
-        if(msg.cnd) {
+        if (msg.cnd) {
           console.log('addIceCandidate', msg.cnd);
           pc.addIceCandidate(new RTCIceCandidate(msg.cnd));
         }
@@ -74,6 +70,11 @@ function start(isAlice) {
   //       pc.addTrack ? stream.getTracks().map(trk => pc.addTrack(trk, stream)) : pc.addStream(stream);
   //   }).catch(e => console.log(`${e.name}: ${e.message}`));
   //   pc.onaddstream = evt => remoteView.srcObject = evt.stream;
+  if (isAlice) {
+    console.log('create dc');
+    var dc = pc.createDataChannel('test');
+    dcEventSetup(dc);
+  }
   pc.ondatachannel = evt => {
     dcEventSetup(evt.channel);
   }
