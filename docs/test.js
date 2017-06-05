@@ -41,7 +41,7 @@ function start(isAlice) {
   //   pc.onaddstream = evt => remoteView.srcObject = evt.stream;
   if(isAlice) {
     var dc = pc.createDataChannel('test');
-    dcEventSetup(evt.channel);
+    dcEventSetup(dc);
   } else {
     pc.ondatachannel = evt => {
       dcEventSetup(evt.channel);
