@@ -17,22 +17,22 @@ fetch(`https://skyway.io/${apiKey}/id?ts=${Date.now()}${Math.random()}`)
       const msg = j2o(evt.data);
       if (msg.src && !pc) start();
       if (msg.ans) {
-        console.log('setRemoteDescription(answer)');
+        console.log('setRemoteDescription(answer)', msg.ans);
         pc.setRemoteDescription(new RTCSessionDescription(msg.ans));
       }
       if (msg.ofr) {
-        console.log('setRemoteDescription(offer)');
+        console.log('setRemoteDescription(offer)', msg.ofr);
         pc.setRemoteDescription(new RTCSessionDescription(msg.ofr))
           .then(_ => {
             console.log('createAnswer()');
             return pc.createAnswer();
           })
           .then(answer => {
-            console.log('setLocalDescription(answer)');
+            console.log('setLocalDescription(answer)', answer);
             return pc.setLocalDescription(answer);
           })
           .then(_ => {
-            console.log('send answer');
+            console.log('send answer', pc.localDescription);
             socket.send(o2j({ type: 'ANSWER', ans: pc.localDescription, dst: msg.src }))
           })
           .catch(e => console.log('set remote offer error', e));
