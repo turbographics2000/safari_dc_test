@@ -10,16 +10,37 @@ fetch(`https://skyway.io/${apiKey}/id?ts=${Date.now()}${Math.random()}`)
   .then(res => res.text()).then(myId => {
     myIdDisp.textContent = myId;
     socket = new WebSocket(`wss://skyway.io/peerjs?key=${apiKey}&id=${myId}&token=${token}`);
+    socket.onopen = evt => {
+      console.log('WebSocket open');
+    }
     socket.onmessage = evt => {
       const msg = j2o(evt.data);
       if (msg.src && !pc) start();
-      msg.ans && pc.setRemoteDescription(new RTCSessionDescription(msg.ans));
-      msg.ofr && pc.setRemoteDescription(new RTCSessionDescription(msg.ofr))
-        .then(_ => pc.createAnswer())
-        .then(answer => pc.setLocalDescription(answer))
-        .then(_ => socket.send(o2j({ type: 'ANSWER', ans: pc.localDescription, dst: msg.src })))
-        .catch(e => console.log('set remote offer error', e));
-      msg.cnd && pc.addIceCandidate(new RTCIceCandidate(msg.cnd));
+      if(msg.ans) {
+        console.log('setRemoteDescription(answer)');
+        pc.setRemoteDescription(new RTCSessionDescription(msg.ans));
+      }
+      if(msg.ofr) {
+        console.log('setRemoteDescription(offer)');
+        pc.setRemoteDescription(new RTCSessionDescription(msg.ofr))
+          .then(_ =>{
+            console.log('createAnswer()');
+            return pc.createAnswer();
+          })
+          .then(answer =>{
+            console.log('setLocalDescription(answer)');
+            return pc.setLocalDescription(answer);
+          })
+          .then(_ => {
+            console.log('send answer');
+            socket.send(o2j({ type: 'ANSWER', ans: pc.localDescription, dst: msg.src }))
+          })
+          .catch(e => console.log('set remote offer error', e));
+        if(msg.cnd) {
+          console.log('addIceCandidate', msg.cnd);
+          pc.addIceCandidate(new RTCIceCandidate(msg.cnd));
+        }
+      }
       msg.type === 'PING' && socket.send(o2j({ type: 'PONG' }));
     };
     socket.onclose = evt => console.log(`socket close: code=${evt.code}`);
@@ -27,11 +48,21 @@ fetch(`https://skyway.io/${apiKey}/id?ts=${Date.now()}${Math.random()}`)
 
 function start(isAlice) {
   pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.skyway.io:3478' }] });
-  pc.onicecandidate = evt => socket.send(o2j({ type: 'CANDIDATE', cnd: evt.candidate, dst: dstId }));
+  pc.onicecandidate = evt => {
+    console.log('onicecandidate', evt.candidate);
+    socket.send(o2j({ type: 'CANDIDATE', cnd: evt.candidate, dst: dstId }));
+  }
   pc.onnegotiationneeded = evt => {
+    console.log('onnegotiationneeded');
     pc.createOffer()
-      .then(offer => pc.setLocalDescription(offer))
-      .then(_ => socket.send(o2j({ type: 'OFFER', ofr: pc.localDescription, dst: dstId })))
+      .then(offer => {
+        console.log('create offer');
+        return pc.setLocalDescription(offer);
+      })
+      .then(_ => {
+        console.log('send offer');
+        socket.send(o2j({ type: 'OFFER', ofr: pc.localDescription, dst: dstId }))
+      })
       .catch(e => console.log('create offer error', e));
   }
   //   navigator.mediaDevices.getUserMedia({video: true}).then(stream => {
