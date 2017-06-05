@@ -4,6 +4,7 @@ let pc, socket, dstId, o2j = JSON.stringify, j2o = JSON.parse;
 btnStart.onclick = _ => {
   dstId = callTo.value.trim();
   start(true);
+}
 
 fetch(`https://skyway.io/${apiKey}/id?ts=${Date.now()}${Math.random()}`)
   .then(res => res.text()).then(myId => {
@@ -52,10 +53,10 @@ function dcEventSetup(dc) {
   dc.onopen = _ => {
     console.log('dc open');
     dc.send('hello');
-  }
+  };
   dc.onmessage = evt => {
     var div = document.createElement('div');
     div.textContent = evt.data;
     msgContainer.appendChild(div);
-  }
+  };
 }
