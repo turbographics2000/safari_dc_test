@@ -37,8 +37,8 @@ peer.on('call', call => {
   var stream = cnvSetup();
   call.answer(stream);
   callSetup(call);
-  var conn = peer.connect(callTo.value);
-  dcSetup(conn);
+  // var conn = peer.connect(callTo.value);
+  // dcSetup(conn);
 });
 
 peer.on('connection', conn => {
