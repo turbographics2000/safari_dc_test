@@ -18,7 +18,7 @@ function drawFrame() {
 }
 
 function webCamSetup() {
-  return navigator.getUserMedia({ video: true, audio: true }).then(stream => {
+  return navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
     return stream;
   }).catch(ex => console.log('getUserMedia error.', ex));
 }
