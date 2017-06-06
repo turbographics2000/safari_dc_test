@@ -38,6 +38,9 @@ peer.on('call', call => {
   });
   var stream = cnvSetup();
   call.answer(stream);
+  call.on('close', _ => {
+    console.log('call on "close"');
+  })
   var conn = peer.connect(callTo.value);
   dcSetup(conn);
 });
