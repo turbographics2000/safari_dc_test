@@ -71,6 +71,6 @@ function dcSetup(conn){
 
 function drawFrame() {
   requestAnimationFrame(drawFrame);
-  ctx.drawImage(selfView, 0, 0);
+  ctx.drawImage(selfView, 0, 0, 427, 240);
 }
 drawFrame();
