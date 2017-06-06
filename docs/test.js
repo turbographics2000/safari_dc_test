@@ -70,14 +70,16 @@ function start(isAlice) {
   //       pc.addTrack ? stream.getTracks().map(trk => pc.addTrack(trk, stream)) : pc.addStream(stream);
   //   }).catch(e => console.log(`${e.name}: ${e.message}`));
   //   pc.onaddstream = evt => remoteView.srcObject = evt.stream;
-  if (isAlice) {
-    console.log('create dc');
-    var dc = pc.createDataChannel('test');
-    dcEventSetup(dc);
-  }
-  pc.ondatachannel = evt => {
-    dcEventSetup(evt.channel);
-  }
+  var stream = cnv.captureStream(30);
+  pc.addStream(stream);
+  // if (isAlice) {
+  //   console.log('create dc');
+  //   var dc = pc.createDataChannel('test');
+  //   dcEventSetup(dc);
+  // }
+  // pc.ondatachannel = evt => {
+  //   dcEventSetup(evt.channel);
+  // }
 }
 
 function dcEventSetup(dc) {
