@@ -1,7 +1,8 @@
 var ctx = cnv.getContext('2d');
 var ua = navigator.userAgent.toLowerCase();
 var isSafari = ua.includes('mac os x 10_13') && ua.includes('safari') && !ua.includes('chrome');
-    
+var rafid = null;
+
 function canvasSetup(videoFileName) {
   return new Promise((resolve, reject) => {
     selfView.onloadedmetadata = evt => {
@@ -10,10 +11,15 @@ function canvasSetup(videoFileName) {
       resolve(stream);
     };
     selfView.src = videoFileName;
+    selfView.onended = evt => {
+      if(rafId) {
+        cancelAnimationFrame(rafId);
+      }
+    }
   });
 }
 function drawFrame() {
-  requestAnimationFrame(drawFrame);
+  rafId = requestAnimationFrame(drawFrame);
   ctx.drawImage(selfView, 0, 0, 427, 240);
 }
 
