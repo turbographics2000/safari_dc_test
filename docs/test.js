@@ -19,6 +19,8 @@ function drawFrame() {
 
 function webCamSetup() {
   return navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
+    cnv.style.display = 'none';
+    selfView.srcObject = stream;
     return stream;
   }).catch(ex => console.log('getUserMedia error.', ex));
 }
