@@ -52,13 +52,16 @@ peer.on('open', id => {
 peer.on('call', call => {
   console.log('peer on "call"');
   if(isSafari) {
-    canvasSetup().then(stream => {
+    canvasSetup('sintel.mp4').then(stream => {
       call.answer(stream);
     });
   } else {
-    webCamSetup().then(stream => {
+    canvasSetup('bb_scaled.mp4').then(stream => {
       call.answer(stream);
     });
+    // webCamSetup().then(stream => {
+    //   call.answer(stream);
+    // });
   }
   callSetup(call);
   // var conn = peer.connect(callTo.value);
