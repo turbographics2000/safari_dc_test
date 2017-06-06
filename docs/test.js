@@ -2,14 +2,14 @@ var ctx = cnv.getContext('2d');
 var ua = navigator.userAgent.toLowerCase();
 var isSafari = ua.includes('mac os x 10_13') && ua.includes('safari') && !ua.includes('chrome');
     
-function canvasSetup() {
+function canvasSetup(videoFileName) {
   return new Promise((resolve, reject) => {
     selfView.onloadedmetadata = evt => {
       var stream = cnv.captureStream(30);
       drawFrame();
       resolve(stream);
     };
-    selfView.src = 'sintel.mp4';
+    selfView.src = videoFileName;
   });
 }
 function drawFrame() {
@@ -32,15 +32,19 @@ peer.on('open', id => {
   btnStart.onclick = evt => {
     var ua = navigator.userAgent.toLowerCase();
     if(isSafari) {
-      canvasSetup().then(stream => {
+      canvasSetup('sintel.mp4').then(stream => {
         var call = peer.call(callTo.value, stream);
         callSetup(call);
       });
     } else {
-      webCamSetup().then(stream => {
+      canvasSetup('bb_scaled.mp4').then(stream => {
         var call = peer.call(callTo.value, stream);
         callSetup(call);
       });
+      // webCamSetup().then(stream => {
+      //   var call = peer.call(callTo.value, stream);
+      //   callSetup(call);
+      // });
     }
   }
 });
