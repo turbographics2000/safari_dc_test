@@ -33,10 +33,10 @@ peer.on('open', id => {
     conn.send('hi!');
     btnStart.style.display = 'none';
   });
-  peer.on('connection', conn => {
-    conn.on('data', function (data) {
-      console.log(data);
-    });
+});
+peer.on('connection', conn => {
+  conn.on('data', function (data) {
+    console.log(data);
   });
 });
 peer.on('call', call => {
