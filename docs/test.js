@@ -1,5 +1,6 @@
+var ctx = cnv.getContext('2d');
+
 function cnvSetup() {
-  var ctx = cnv.getContext('2d');
   var mPos = null;
   cnv.onmousedown = evt => {
     mPos = { x: evt.offsetX, y: evt.offsetY };
