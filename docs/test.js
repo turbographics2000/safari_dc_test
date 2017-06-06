@@ -27,20 +27,16 @@ peer.on('open', id => {
   myIdDisp.textContent = id;
   btnStart.onclick = evt => {
     var stream = cnvSetup();
-    peer.call(callTo.value, stream);
+    var call = peer.call(callTo.value, stream);
+    callSetup(call);
   }
 });
 
 peer.on('call', call => {
   console.log('peer on "call"');
-  call.on('stream', stream => {
-    remoteView.srcObject = stream;
-  });
   var stream = cnvSetup();
   call.answer(stream);
-  call.on('close', _ => {
-    console.log('call on "close"');
-  })
+  callSetup(call);
   var conn = peer.connect(callTo.value);
   dcSetup(conn);
 });
@@ -49,6 +45,15 @@ peer.on('connection', conn => {
   console.log('peer on "connection"');
   dcSetup(conn);
 });
+
+function callSetup(call) {
+  call.on('stream', stream => {
+    remoteView.srcObject = stream;
+  });
+  call.on('close', _ => {
+    console.log('call on "close"');
+  });
+}
 
 function dcSetup(conn){
   conn.on('data', function (data) {
