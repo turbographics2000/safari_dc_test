@@ -1,35 +1,41 @@
 var ctx = cnv.getContext('2d');
 
 function cnvSetup() {
-  var mPos = null;
-  cnv.onmousedown = evt => {
-    mPos = { x: evt.offsetX, y: evt.offsetY };
-  }
-  cnv.onmousemove = evt => {
-    if (mPos) {
-      ctx.beginPath();
-      ctx.moveTo(mPos.x, mPos.y);
-      ctx.lineTo(evt.offsetX, evt.offsetY);
-      ctx.stroke();
-      mPos = { x: evt.offsetX, y: evt.offsetY };
-    }
-  }
-  cnv.onmouseup = evt => {
-    mPos = null;
-  }
-  var stream = cnv.captureStream(30);
-  return stream;
+  return new Promise((resolve, reject) => {
+    selfView.onloadedmetadata = evt => {
+      var stream = cnv.captureStream(30);
+      drawFrame();
+      resolve(stream);
+    };
+    selfView.src = 'sintel.mp4';
+  });
+}
+function drawFrame() {
+  requestAnimationFrame(drawFrame);
+  ctx.drawImage(selfView, 0, 0, 427, 240);
 }
 
+function webCamSetup() {
+  return navigator.getUserMedia({ video: true, audio: true }).then(stream => {
+    return stream;
+  }).catch(ex => console.log('getUserMedia error.', ex));
+}
 var peer = new Peer({ key: 'ce16d9aa-4119-4097-a8a5-3a5016c6a81c', debug: 3 });
 
 peer.on('open', id => {
   console.log('peer on "open"');
   myIdDisp.textContent = id;
-  btnStart.onclick = evt => {
-    var stream = cnvSetup();
-    var call = peer.call(callTo.value, stream);
-    callSetup(call);
+  btnCanvasStart.onclick = evt => {
+    cnvSetup().then(stream => {
+      var call = peer.call(callTo.value, stream);
+      callSetup(call);
+    });
+  }
+  btnWebCamStart.onclick = evt => {
+    webCamSetup().then(stream => {
+      var call = peer.call(callTo.value, stream);
+      callSetup(call);
+    });
   }
 });
 
@@ -57,7 +63,7 @@ function callSetup(call) {
   });
 }
 
-function dcSetup(conn){
+function dcSetup(conn) {
   conn.on('data', function (data) {
     console.log('conn on "data"');
     console.log(data);
@@ -69,8 +75,3 @@ function dcSetup(conn){
   });
 }
 
-function drawFrame() {
-  requestAnimationFrame(drawFrame);
-  ctx.drawImage(selfView, 0, 0, 427, 240);
-}
-drawFrame();
