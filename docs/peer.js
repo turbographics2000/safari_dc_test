@@ -642,6 +642,8 @@ Negotiator._makeOffer = function(connection) {
 
     pc.setLocalDescription(offer, function() {
       util.log('Set localDescription: offer', 'for:', connection.peer);
+      console.log('offer');
+      console.log(offer.sdp);
       connection.provider.socket.send({
         type: 'OFFER',
         payload: {
@@ -681,6 +683,8 @@ Negotiator._makeAnswer = function(connection) {
 
     pc.setLocalDescription(answer, function() {
       util.log('Set localDescription: answer', 'for:', connection.peer);
+      console.log('answer');
+      console.log(answer.sdp);
       connection.provider.socket.send({
         type: 'ANSWER',
         payload: {
