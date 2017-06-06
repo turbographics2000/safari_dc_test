@@ -67,3 +67,9 @@ function dcSetup(conn){
     btnStart.style.display = 'none';
   });
 }
+
+function drawFrame() {
+  requestAnimationFrame(drawFrame);
+  ctx.drawImage(selfView, 0, 0);
+}
+drawFrame();

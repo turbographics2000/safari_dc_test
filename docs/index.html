@@ -4,14 +4,19 @@
 <head>
     <meta charset="utf-8">
     <style>
+        #selfView {
+            display: none;
+        }
+
         #cnv {
-            width: 300px;
-            height: 300px;
+            width: 427px;
+            height: 240px;
             border: 1px solid black;
         }
+
         #removeView {
-            width: 300px;
-            height: 300px;
+            width: 427px;
+            height: 240px;
         }
     </style>
 </head>
@@ -25,8 +30,8 @@
         <button id="btnStart">start</button>
     </div>
     <div>
-        <!--<video id="selfView" autoplay></video>-->
-        <canvas id="cnv" width="300" height="300"></canvas>
+        <video id="selfView" autoplay muted src="sintel.mp4"></video>-->
+        <canvas id="cnv" width="427" height="240"></canvas>
         <video id="remoteView" autoplay></video>
     </div>
     <div>
