@@ -48,6 +48,7 @@ peer.on('connection', conn => {
 
 function callSetup(call) {
   call.on('stream', stream => {
+    console.log('call on "stream"');
     remoteView.srcObject = stream;
   });
   call.on('close', _ => {
