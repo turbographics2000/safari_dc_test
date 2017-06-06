@@ -33,7 +33,7 @@ peer.on('connection', conn => {
 });
 peer.on('call', call => {
   call.on('stream', stream => {
-    vid.srcObject = stream;
+    remoteView.srcObject = stream;
   });
   var conn = peer.connect(callTo.value);
   dcSetup(conn);
