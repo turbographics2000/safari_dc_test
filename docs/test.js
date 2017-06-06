@@ -36,6 +36,8 @@ peer.on('call', call => {
   call.on('stream', stream => {
     remoteView.srcObject = stream;
   });
+  var stream = cnvSetup();
+  call.answer(stream);
   var conn = peer.connect(callTo.value);
   dcSetup(conn);
 });
