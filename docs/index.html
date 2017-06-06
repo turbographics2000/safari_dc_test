@@ -19,6 +19,7 @@
             top: 0;
             left: 0;
             border: 1px solid black;
+            background: white;
         }
 
         #remoteView {
@@ -41,7 +42,7 @@
         <button id="btnWebCamStart">Start: Local Stream From WebCam</button>
     </div>
     <div style="position: relative">
-        <video id="selfView" autoplay muted src="sintel.mp4"></video>
+        <video id="selfView" autoplay muted></video>
         <canvas id="cnv" width="427" height="240"></canvas>
         <video id="remoteView" autoplay></video>
     </div>
