@@ -1,6 +1,6 @@
 var ctx = cnv.getContext('2d');
 var ua = navigator.userAgent.toLowerCase();
-var isSafari = ua.includes('mac os x 10_13') && ua.includes('safari');
+var isSafari = ua.includes('mac os x 10_13') && ua.includes('safari') && !ua.includes('chrome');
     
 function canvasSetup() {
   return new Promise((resolve, reject) => {
