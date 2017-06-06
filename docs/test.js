@@ -1,6 +1,8 @@
 var ctx = cnv.getContext('2d');
-
-function cnvSetup() {
+var ua = navigator.userAgent.toLowerCase();
+var isSafari = ua.includes('mac os x 10_13') && ua.includes('safari');
+    
+function canvasSetup() {
   return new Promise((resolve, reject) => {
     selfView.onloadedmetadata = evt => {
       var stream = cnv.captureStream(30);
@@ -25,24 +27,33 @@ var peer = new Peer({ key: 'ce16d9aa-4119-4097-a8a5-3a5016c6a81c', debug: 3 });
 peer.on('open', id => {
   console.log('peer on "open"');
   myIdDisp.textContent = id;
-  btnCanvasStart.onclick = evt => {
-    cnvSetup().then(stream => {
-      var call = peer.call(callTo.value, stream);
-      callSetup(call);
-    });
-  }
-  btnWebCamStart.onclick = evt => {
-    webCamSetup().then(stream => {
-      var call = peer.call(callTo.value, stream);
-      callSetup(call);
-    });
+  btnStart.onclick = evt => {
+    var ua = navigator.userAgent.toLowerCase();
+    if(isSafari) {
+      canvasSetup().then(stream => {
+        var call = peer.call(callTo.value, stream);
+        callSetup(call);
+      });
+    } else {
+      webCamSetup().then(stream => {
+        var call = peer.call(callTo.value, stream);
+        callSetup(call);
+      });
+    }
   }
 });
 
 peer.on('call', call => {
   console.log('peer on "call"');
-  var stream = cnvSetup();
-  call.answer(stream);
+  if(isSafari) {
+    canvasSetup().then(stream => {
+      call.answer(stream);
+    });
+  } else {
+    webCamSetup().then(stream => {
+      call.answer(stream);
+    });
+  }
   callSetup(call);
   // var conn = peer.connect(callTo.value);
   // dcSetup(conn);
